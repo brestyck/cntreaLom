@@ -18,7 +18,7 @@ logo = r'''
     ▒██▀ ▀█   ██ ▀█   █ ▓  ██▒ ▓▒▓██ ▒ ██▒▓█   ▀▒████▄    ▓██▒    ▒██▒  ██▒▓██▒▀█▀ ██▒
     ▒▓█    ▄ ▓██  ▀█ ██▒▒ ▓██░ ▒░▓██ ░▄█ ▒▒███  ▒██  ▀█▄  ▒██░    ▒██░  ██▒▓██    ▓██░
     ▒▓▓▄ ▄██▒▓██▒  ▐▌██▒░ ▓██▓ ░ ▒██▀▀█▄  ▒▓█  ▄░██▄▄▄▄██ ▒██░    ▒██   ██░▒██    ▒██ 
-    ▒ ▓███▀ ░▒██░   ▓██░  ▒██▒ ░ ░██▓ ▒██▒░▒████▒▓█   ▓██▒░██████▒░ ████▓▒░▒██▒   ░██▒      версия 2
+    ▒ ▓███▀ ░▒██░   ▓██░  ▒██▒ ░ ░██▓ ▒██▒░▒████▒▓█   ▓██▒░██████▒░ ████▓▒░▒██▒   ░██▒      версия 2.1
     ░ ░▒ ▒  ░░ ▒░   ▒ ▒   ▒ ░░   ░ ▒▓ ░▒▓░░░ ▒░ ░▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▒░▒░ ░ ▒░   ░  ░
     ░  ▒   ░ ░░   ░ ▒░    ░      ░▒ ░ ▒░ ░ ░  ░ ▒   ▒▒ ░░ ░ ▒  ░  ░ ▒ ▒░ ░  ░      ░
     ░           ░   ░ ░   ░        ░░   ░    ░    ░   ▒     ░ ░   ░ ░ ░ ▒  ░      ░   
@@ -44,17 +44,18 @@ instructions = f'''
 
 menu = f'''
     [{m}1{n}] Инструкция
-    [{b}2{n}] Python (1 файл)  
-    [{b}3{n}] Python (2 файл)
-    [{b}4{n}] Golang (1 файл)
-    [{b}5{n}] Golang (2 файл)
-    [{r}6{n}] Выйти
+    [{b}2{n}] Python 1 файл
+    [{b}3{n}] Python 2 файл
+    [{b}4{n}] Golang 1 файл
+    [{b}5{n}] Golang 2 файл
+    [{o}6{n}] Golang (вывод пробелов)
+    [{r}E{n}] Выйти
 '''
 
 # EXPLOITS SOURCE CODE
-
-init_py = "print(\"ilovecntrea\")"
-init_go = '''
+inits = {
+    "py": "print(\"ilovecntrea\")",
+    "go": '''
 package main
 
 import "fmt"
@@ -63,55 +64,16 @@ func main() {
     fmt.Println("ilovecntrea")
 }
 '''
-# Compiling cntrea logs
-def complile_logs(data, lang):
-    data = data.replace("\"", "")
-    data = data.split()
-    compiled = []
-    for i in range(len(data)):
-        if data[i] == "Expected":
-            print(f"[{g}*{n}] Найден ответ: {b}{data[i+1]}{n}")
-            compiled.append(data[i+1])
-    compiled_string = ""
-    for j in compiled:
-        compiled_string += ("\""+j+"\",\n")
-    if lang == "py":
-        compiled_string = compiled_string[:-2]
-    print(f"[{m}+{n}] Нажмите {b}Enter{n}, чтобы продолжить")
-    input()
-    return compiled_string
+}
 
-
-while True:
-    cls()
-    print(o, logo, n)
-    print(menu)
-    command = input(">>> ")
-
-    if command == "1":
-        cls()
-        print(r, logo, n)
-        print(instructions)
-        input()
-    if command == "2":
-        with open("first.py", "w") as first_file:
-            first_file.write(init_py)
-        cls()
-        print(r, logo, n)
-        print(o, "Первый файл был сохранен под именем first.py (Нажмите Enter, чтобы продолжить)", n)
-        input()
-    if command == "3":
-        cls()
-        print(r, logo, n)
-        print(f"Вставьте {g}детализацию результатов{n} из Цнтреи (чтобы закончить ввод нажмите {r}Ctrl+Z{n} на Windows, или {r}Ctrl+D{n} на Linux) >>>")
-        data = sys.stdin.read()
-        compiled = complile_logs(data, "py")
-    
-        python_exploit = f'''
+def get_raw_exploit(answers_string, lang):
+    exploits = {
+# PYTHON Exploit Source ==============================
+    "py": f'''
 import os
 
 answers = [
-{compiled}
+{answers_string}
 ]
 
 
@@ -134,28 +96,9 @@ else:
     write_attempt(str(i+1))
     print(answers[i])
     exit()
-'''
-        with open("exploit.py", "w") as exploit_file:
-            exploit_file.write(python_exploit)
-        cls()
-        print(r, logo, n)
-        print(o, "Главный файл был сохранен под именем exploit.py (Нажмите Enter, чтобы продолжить)", n)
-        input()
-    if command == "4":
-        with open("first.go", "w") as first_file:
-            first_file.write(init_go)
-        cls()
-        print(r, logo, n)
-        print(o, "Первый файл был сохранен под именем first.go (Нажмите Enter, чтобы продолжить)", n)
-        input()
-    if command == "5":
-        cls()
-        print(r, logo, n)
-        print(f"Вставьте {g}детализацию результатов{n} из Цнтреи (чтобы закончить ввод нажмите {r}Ctrl+Z{n} на Windows, или {r}Ctrl+D{n} на Linux) >>>")
-        data = sys.stdin.read()
-        compiled = complile_logs(data, "go")
-
-        golang_exploit = '''
+''',
+# GOLANG Exploit Source ==============================
+"go": '''
 package main
 
 import (
@@ -184,7 +127,7 @@ func read_attempt() int {
 
 func main() {
 	answers := []any{
-		'''+compiled+'''
+		'''+answers_string+'''
 	}
 	if read_attempt() == -1 {
 		write_attempt(0)
@@ -199,15 +142,77 @@ func main() {
 		}
 	}
 }'''
+}
+    return exploits[lang]
 
-        with open("exploit.go", "w") as exploit_file:
-            exploit_file.write(golang_exploit)
+# Compiling cntrea logs
+def split_logs(data, keyword):
+    data = data.replace("\"", "")
+    data = data.split()
+    compiled = []
+    for i in range(len(data)):
+        if data[i] == keyword:
+            print(f"[{g}*{n}] Найден ответ: {b}{data[i+1]}{n}")
+            compiled.append(data[i+1])
+    return compiled
+
+def compile_logs(data, lang):
+    compiled = split_logs(data, "Expected")
+    compiled_string = ""
+    for j in compiled:
+        compiled_string += ("\""+j+"\",\n")
+    if lang == "py":
+        compiled_string = compiled_string[:-2]
+    print(f"[{m}+{n}] Нажмите {b}Enter{n}, чтобы продолжить")
+    input()
+    return compiled_string
+
+# Whole actions
+def default_exploit(lang):
+    cls()
+    print(r, logo, n)
+    print(f"Вставьте {g}детализацию результатов{n} из Цнтреи (чтобы закончить ввод нажмите {r}Ctrl+Z{n} на Windows, или {r}Ctrl+D{n} на Linux) >>>")
+    data = sys.stdin.read()
+    compiled = compile_logs(data, lang)
+
+    golang_exploit = get_raw_exploit(compiled, lang)
+
+    with open(f"exploit.{lang}", "w") as exploit_file:
+        exploit_file.write(golang_exploit)
+    cls()
+    print(r, logo, n)
+    print(o, f"Главный файл был сохранен под именем exploit.{lang} (Нажмите Enter, чтобы продолжить)", n)
+    input()
+
+def create_initial_file(lang):
+    with open(f"first.{lang}", "w") as first_file:
+        first_file.write(inits[lang])
+    cls()
+    print(r, logo, n)
+    print(o, f"Первый файл был сохранен под именем first.{lang} (Нажмите Enter, чтобы продолжить)", n)
+    input()
+
+# Main menu
+while True:
+    cls()
+    print(o, logo, n)
+    print(menu)
+    command = input(">>> ")
+
+    if command == "1":
         cls()
         print(r, logo, n)
-        print(o, "Главный файл был сохранен под именем exploit.go (Нажмите Enter, чтобы продолжить)", n)
+        print(instructions)
         input()
+    if command == "2":
+        create_initial_file("py")
+    if command == "3":
+        default_exploit("py")
+    if command == "4":
+        create_initial_file("go")
+    if command == "5":
+        default_exploit("go")
     if command == "6":
         cls()
         print(m, "Спасибо за использование!", n)
         exit()
-
