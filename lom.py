@@ -18,7 +18,7 @@ logo = r'''
     ▒██▀ ▀█   ██ ▀█   █ ▓  ██▒ ▓▒▓██ ▒ ██▒▓█   ▀▒████▄    ▓██▒    ▒██▒  ██▒▓██▒▀█▀ ██▒
     ▒▓█    ▄ ▓██  ▀█ ██▒▒ ▓██░ ▒░▓██ ░▄█ ▒▒███  ▒██  ▀█▄  ▒██░    ▒██░  ██▒▓██    ▓██░
     ▒▓▓▄ ▄██▒▓██▒  ▐▌██▒░ ▓██▓ ░ ▒██▀▀█▄  ▒▓█  ▄░██▄▄▄▄██ ▒██░    ▒██   ██░▒██    ▒██ 
-    ▒ ▓███▀ ░▒██░   ▓██░  ▒██▒ ░ ░██▓ ▒██▒░▒████▒▓█   ▓██▒░██████▒░ ████▓▒░▒██▒   ░██▒      версия 2.1
+    ▒ ▓███▀ ░▒██░   ▓██░  ▒██▒ ░ ░██▓ ▒██▒░▒████▒▓█   ▓██▒░██████▒░ ████▓▒░▒██▒   ░██▒      версия 3.1 (обход блокировки)
     ░ ░▒ ▒  ░░ ▒░   ▒ ▒   ▒ ░░   ░ ▒▓ ░▒▓░░░ ▒░ ░▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▒░▒░ ░ ▒░   ░  ░
     ░  ▒   ░ ░░   ░ ▒░    ░      ░▒ ░ ▒░ ░ ░  ░ ▒   ▒▒ ░░ ░ ▒  ░  ░ ▒ ▒░ ░  ░      ░
     ░           ░   ░ ░   ░        ░░   ░    ░    ░   ▒     ░ ░   ░ ░ ░ ▒  ░      ░   
@@ -103,24 +103,30 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 )
 
 func write_attempt(attempt int) {
-	os.Mkdir(fmt.Sprint(attempt), os.ModeAppend)
+	fo, err := os.Create("datainfo")
+	defer fo.Close()
+	_, err = fo.Write([]byte(fmt.Sprint(attempt)))
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func read_attempt() int {
-	path, _ := os.Getwd()
-	files, _ := os.ReadDir(path)
 	maxima := -1
-	for _, j := range files {
-		if i, err := strconv.Atoi(j.Name()); err == nil {
-			if i > maxima {
-				maxima = i
-			}
+	if _, err := os.Stat("datainfo"); err == nil {
+		data, err := os.ReadFile("datainfo")
+		maxima, err = strconv.Atoi(string(data))
+		if err != nil {
+			log.Fatal(err)
 		}
+	} else {
+		os.Create("datainfo")
 	}
 	return maxima
 }
@@ -141,7 +147,8 @@ func main() {
 			fmt.Println(answers[x+1])
 		}
 	}
-}'''
+}
+'''
 }
     return exploits[lang]
 
@@ -213,6 +220,11 @@ while True:
     if command == "5":
         default_exploit("go")
     if command == "6":
+        cls()
+        print(o, logo, n)
+        print("")
+        input()
+    if command.lower() == "e":
         cls()
         print(m, "Спасибо за использование!", n)
         exit()
