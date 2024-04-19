@@ -31,6 +31,7 @@ var bm = false;
 
 function runbrute() {
 	bm = Boolean(document.getElementById("bmEnabledId").checked);
+	hide = Boolean(document.getElementById("hideEnabledId").checked);
 	a = Number(document.getElementById("asel").value)
 	b = Number(document.getElementById("bsel").value)
 	d = Number(document.getElementById("dsel").value)
@@ -38,7 +39,9 @@ function runbrute() {
 	s = Number(document.getElementById("stepsel").value)
 	atoabase = Number(document.getElementById("atoabase").value)
 	const node = document.getElementById("cntreabrutenode")
-	node.hidden = true;
+	if (hide == true) {
+		node.hidden = true;
+	}
 	if (bm == true) {
 		console.log("[ATOA] Running with custom base");
 		bruteforce(a, b, d, s, i, atoabase);
@@ -76,6 +79,10 @@ function toggle_brutebox() {
 	binModeEnabled.type = "checkbox";
 	binModeEnabled.id = "bmEnabledId";
 	
+	const hideModeEnabled = document.createElement("input");
+	hideModeEnabled.type = "checkbox";
+	hideModeEnabled.id = "hideEnabledId";
+	
 	const baseselector = document.createElement("input");
 	baseselector.id = "atoabase";
 	baseselector.placeholder = "Enter base (blank for 10)";
@@ -106,6 +113,9 @@ function toggle_brutebox() {
 	node.appendChild(document.createElement("br"))
 	node.appendChild(binModeEnabled)
 	node.appendChild(document.createTextNode("Generate in atoa"))
+	node.appendChild(document.createElement("br"))
+	node.appendChild(hideModeEnabled)
+	node.appendChild(document.createTextNode("Hide after startup"))
 	node.appendChild(document.createElement("br"))
 	node.appendChild(baseselector)
 	node.appendChild(document.createElement("br"))
