@@ -7,9 +7,9 @@ function atoa(dec, base) {
 }
 
 // Set (min, max, timeout) as a interval
-async function bruteforce(a, b, t, base) {
+async function bruteforce(a, b, t, s, base) {
 	// var field = document.getElementById(form_id)
-	for (var i = a; i < b; i++) {
+	for (var i = a; i < b; i = i + s) {
 		var field = document.getElementsByClassName("form form_input")[0]
 		console.log("["+i+"] ANSWER INSERTED");
 		if (base != 10) {
@@ -34,15 +34,16 @@ function runbrute() {
 	a = Number(document.getElementById("asel").value)
 	b = Number(document.getElementById("bsel").value)
 	d = Number(document.getElementById("dsel").value)
+	s = Number(document.getElementById("stepsel").value)
 	atoabase = Number(document.getElementById("atoabase").value)
 	const node = document.getElementById("cntreabrutenode")
 	node.hidden = true;
 	if (bm == true) {
 		console.log("[ATOA] Running with custom base");
-		bruteforce(a, b, d, atoabase);
+		bruteforce(a, b, d, s, atoabase);
 	} else {
 		console.log("[ATOA] Running with base 10");
-		bruteforce(a, b, d, 10);
+		bruteforce(a, b, d, s, 10);
 	}
 }
 
@@ -56,18 +57,28 @@ function toggle_brutebox() {
 	const aselector = document.createElement("input");
 	aselector.placeholder = "Enter left border";
 	aselector.id = "asel";
+	
 	const bselector = document.createElement("input");
 	bselector.id = "bsel";
 	bselector.placeholder = "Enter right border";
+	
 	const dselector = document.createElement("input");
 	dselector.id = "dsel";
-	dselector.placeholder = "Enter delay";
+	dselector.placeholder = "Enter delay (ms)";
+	
+	const sselector = document.createElement("input");
+	sselector.id = "stepsel";
+	sselector.placeholder = "Enter step (1 by default)";
+	sselector.value = 1;
+	
 	const binModeEnabled = document.createElement("input");
 	binModeEnabled.type = "checkbox";
 	binModeEnabled.id = "bmEnabledId";
+	
 	const baseselector = document.createElement("input");
 	baseselector.id = "atoabase";
 	baseselector.placeholder = "Enter base (blank for 10)";
+	
 	const confirmation = document.createElement("button");
 	confirmation.id = "cbtn"
 	confirmation.addEventListener("click", runbrute)
@@ -79,6 +90,8 @@ function toggle_brutebox() {
 	node.appendChild(aselector)
 	node.appendChild(document.createElement("br"))
 	node.appendChild(bselector)
+	node.appendChild(document.createElement("br"))
+	node.appendChild(sselector)
 	node.appendChild(document.createElement("br"))
 	node.appendChild(dselector)
 	node.appendChild(document.createElement("br"))
