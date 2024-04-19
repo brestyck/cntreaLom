@@ -7,10 +7,10 @@ function atoa(dec, base) {
 }
 
 // Set (min, max, timeout) as a interval
-async function bruteforce(a, b, t, s, base) {
+async function bruteforce(a, b, t, s, index, base) {
 	// var field = document.getElementById(form_id)
 	for (var i = a; i < b; i = i + s) {
-		var field = document.getElementsByClassName("form form_input")[0]
+		var field = document.getElementsByClassName("form form_input")[index]
 		console.log("["+i+"] ANSWER INSERTED");
 		if (base != 10) {
 			field.value = atoa(i, base);
@@ -34,16 +34,17 @@ function runbrute() {
 	a = Number(document.getElementById("asel").value)
 	b = Number(document.getElementById("bsel").value)
 	d = Number(document.getElementById("dsel").value)
+	i = Number(document.getElementById("isel").value)
 	s = Number(document.getElementById("stepsel").value)
 	atoabase = Number(document.getElementById("atoabase").value)
 	const node = document.getElementById("cntreabrutenode")
 	node.hidden = true;
 	if (bm == true) {
 		console.log("[ATOA] Running with custom base");
-		bruteforce(a, b, d, s, atoabase);
+		bruteforce(a, b, d, s, i, atoabase);
 	} else {
 		console.log("[ATOA] Running with base 10");
-		bruteforce(a, b, d, s, 10);
+		bruteforce(a, b, d, s, i, 10);
 	}
 }
 
@@ -79,6 +80,11 @@ function toggle_brutebox() {
 	baseselector.id = "atoabase";
 	baseselector.placeholder = "Enter base (blank for 10)";
 	
+	const iselector = document.createElement("input");
+	iselector.id = "isel";
+	iselector.placeholder = "Enter field index (0 by def)";
+	iselector.value = 0;
+	
 	const confirmation = document.createElement("button");
 	confirmation.id = "cbtn"
 	confirmation.addEventListener("click", runbrute)
@@ -102,6 +108,8 @@ function toggle_brutebox() {
 	node.appendChild(document.createTextNode("Generate in atoa"))
 	node.appendChild(document.createElement("br"))
 	node.appendChild(baseselector)
+	node.appendChild(document.createElement("br"))
+	node.appendChild(iselector)
 	document.getElementById("dom_root").appendChild(node);
 }
 
